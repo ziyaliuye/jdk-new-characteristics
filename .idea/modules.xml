@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/java-new-characteristics.iml" filepath="$PROJECT_DIR$/java-new-characteristics.iml" />
+      <module fileurl="file://$PROJECT_DIR$/module-export/module-export.iml" filepath="$PROJECT_DIR$/module-export/module-export.iml" />
+      <module fileurl="file://$PROJECT_DIR$/module-requies/module-requies.iml" filepath="$PROJECT_DIR$/module-requies/module-requies.iml" />
+    </modules>
+  </component>
+</project>
