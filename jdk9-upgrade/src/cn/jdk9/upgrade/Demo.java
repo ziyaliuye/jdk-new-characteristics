@@ -90,29 +90,5 @@ public class Demo {
         Map.of("A", 1, "B", 2, "C", 3);
         Set.of(1, 2, 3, 4);
         // 同样的， 这个返回的集合也为只读
-
-        /* InputStream加强 */
-        ClassLoader classLoader = Demo.class.getClassLoader();
-        try (OutputStream outputStream = new FileOutputStream("D:\\1.txt");
-             InputStream inputStream = classLoader.getResourceAsStream("db.properties")) {
-            // transferTo 将输入流中的所有数据复制到输出流中
-            assert inputStream != null;
-            inputStream.transferTo(outputStream);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        /*
-         * Java的Steam API是java标准库最好的改进之一，让开发者能够快速运算，从而能够有效的利用数据并行计算
-         * Java 8提供的Steam能够利用多核架构实现声明式的数据处理
-         *
-         * 在Java 9中，Stream API变得更好， Stream 接口中添加了 4 个新的方法：
-         *  takeWhile, dropWhile, ofNullable
-         *  还有个 iterate 方法的新重载方法，可以让你提供一个 Predicate (判断条件)来指定什么时候结束迭代
-         *
-         * 除了对 Stream 本身的扩展， Optional 和 Stream 之间的结合也得到了改进
-         *  现在可以通过Optional的新方法stream()将一个Optional对象转换为一个(可能是空的)Stream对象
-         */
-
     }
 }
