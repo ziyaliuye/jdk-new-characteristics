@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/java-new-characteristics.iml" filepath="$PROJECT_DIR$/java-new-characteristics.iml" />
+      <module fileurl="file://$PROJECT_DIR$/jdk9-upgrade/jdk9-upgrade.iml" filepath="$PROJECT_DIR$/jdk9-upgrade/jdk9-upgrade.iml" />
       <module fileurl="file://$PROJECT_DIR$/module-export/module-export.iml" filepath="$PROJECT_DIR$/module-export/module-export.iml" />
       <module fileurl="file://$PROJECT_DIR$/module-requies/module-requies.iml" filepath="$PROJECT_DIR$/module-requies/module-requies.iml" />
     </modules>
