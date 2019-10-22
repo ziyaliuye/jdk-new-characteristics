@@ -89,6 +89,17 @@ public class Demo {
         List<Integer> list2 = List.of(1, 2, 3, 4, 5, 6);
         Map.of("A", 1, "B", 2, "C", 3);
         Set.of(1, 2, 3, 4);
-        // 同样的， 这个返回的集合也为只读
+        /* 同样的， 这个返回的集合也为只读 */
+
+        /* InputStream加强 */
+        ClassLoader classLoader = Demo.class.getClassLoader();
+        try (OutputStream outputStream = new FileOutputStream("D:\\1.txt");
+             InputStream inputStream = classLoader.getResourceAsStream("db.properties")) {
+            // transferTo 将输入流中的所有数据复制到输出流中
+            assert inputStream != null;
+            inputStream.transferTo(outputStream);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
