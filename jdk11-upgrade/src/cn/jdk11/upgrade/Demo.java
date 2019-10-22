@@ -32,15 +32,61 @@ package cn.jdk11.upgrade;
              ...........这特么哪个大神写的代码.....................
 */
 
+import java.sql.SQLOutput;
+import java.util.Optional;
+
 /**
  * @author lele
  * @version 1.0
- * @Description
+ * @Description 从 JVM GC 的角度， JDK11引入了两种新的GC， 其中包括也许是划时代意义的 ZGC
+ * 虽然其目前还是实验特性， 但是从能力上来看， 这是JDK的一个巨大突破， 为特定生产环境的苛刻需求提供了一个可能的选择
+ * 例如，对部分企业核心存储等产品，如果能够保证不超过10ms的GC暂停，可靠性会上一个大的台阶
+ * 这是过去我们进行GC调优几乎做不到的，是能与不能的问题
  * @Email 414955507@qq.com
  * @date 2019/10/22 21:24
  */
 public class Demo {
+    /* 代码层面的修改： */
     public static void main(String[] args) {
+        /* String新增了几个方法 */
+        // isBlank()：判断字符串是否为空白（\t\n都属于空白）
+        System.out.println("是否为空白：" + "\t\t".isBlank());
+        // strip()：去除首尾空白, trim()的增强版， 连同\t\n一起去掉
+        System.out.println("\t abc \t去除尾首空白后：" + "\t abc \t".strip());
+        // stripTrailing()：去除尾部空格
+        System.out.println("\t abc \t去除尾部空白后：" + "\t abc \t".stripTrailing());
+        // stripLeading()：去除首部空格
+        System.out.println("\t abc \t去除首部空白后：" + "\t abc \t".stripLeading());
+        // repeat(10)：复制字符串10次然后返回结果
+        String repeatStr = "abc".repeat(10);
+        System.out.println("abc重复10次结果：" + repeatStr);
+        // lines().count()：返回字符串的行数（以 \n 为换行）
+        System.out.println("a\nb\nc".lines().count() + "行");
 
+        /* Optional也增加了几个方法， 现在可以很方便的将一个Optional转换成一个Stream, 或者当一个空Optional时给它一个替代的 */
+        Optional<Object> optional = Optional.empty();
+        // boolean isEmpty()：判断value是否为空（JDK 11）
+        System.out.println("optional是否为空" + optional.isEmpty());
+        System.out.println("optional是否非空" + optional.isPresent());
+        // ifPresentOrElse (Consumer<?super T> action, Runnable emptyAction)：
+        // value非空，执行参数1功能；如果value为空，执行参数2功能（JDK 9）
+        Optional optional6 = Optional.ofNullable("wocao");
+        // 说人话：如果参数e（也就是optional6本身）不为空则执行第一个函数， 如果为空则执行第二个函数
+        optional6.ifPresentOrElse((e) -> System.out.println("第一个函数：" + e), () -> System.out.println("第二个函数：" + "BB"));
+        // Optional<T> or​(Supplier<?extends Optional<? extends T>> supplier)：
+        // value非空，返回对应的Optional；value为空，返回形参封装的Optional（JDK 9）
+        Optional optional2 = Optional.empty();
+        Optional optional3 = Optional.ofNullable("wocao");
+        // 为空则返回optional3， 非空直接返回optional2
+        System.out.println("or()返回值：" + optional2.or(() -> optional3));
+        // Stream<T> stream() value非空，返回仅包含此value的Stream；否则，返回一个空的Stream（JDK 9）
+        Optional optional1 = Optional.empty();
+        System.out.println("空的Stream：");
+        optional.stream().forEach(System.out::println);
+        // T orElseThrow()：value非空，返回value；否则抛异常NoSuchElementException（JDK 10）
+        optional = Optional.of("abc"); // 增加一点数据
+        var obj = optional.orElseThrow();
+        // 当使用这个对象值时， 如果为空，源码中直接手动抛出NoSuchElementException异常
+        System.out.println(obj);
     }
 }
