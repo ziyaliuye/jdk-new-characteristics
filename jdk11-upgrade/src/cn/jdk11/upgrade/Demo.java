@@ -32,8 +32,15 @@ package cn.jdk11.upgrade;
              ...........这特么哪个大神写的代码.....................
 */
 
+import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.sql.SQLOutput;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
 
 /**
  * @author lele
@@ -47,7 +54,7 @@ import java.util.Optional;
  */
 public class Demo {
     /* 代码层面的修改： */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException, InterruptedException {
         /* String新增了几个方法 */
         // isBlank()：判断字符串是否为空白（\t\n都属于空白）
         System.out.println("是否为空白：" + "\t\t".isBlank());
@@ -88,5 +95,30 @@ public class Demo {
         var obj = optional.orElseThrow();
         // 当使用这个对象值时， 如果为空，源码中直接手动抛出NoSuchElementException异常
         System.out.println(obj);
+
+        /*
+         * 局部变量推断升级：
+         * 在var上添加注解的语法格式，在jdk10中是不能实现的。在JDK11中加入了这样的语法
+         */
+        // 在JDK11以前是不允许注解修饰的变量使用var的， @Deprecated是给结构表明过时的意思， 这里就是单纯的验证一下语法
+        Consumer<String> consumer = (@Deprecated var t) -> System.out.println(t.toUpperCase());
+
+        /*
+         * 这是Java9开始引入的一个处理HTTP请求的的HTTPClientAPI，该API支持同步和异步， 而在Java11中已经为正式可用状态，类位于java.net包下
+         * 它将替代仅适用于blocking模式的HttpURLConnection（HttpURLConnection是在HTTP1.0的时代创建的，并使用了协议无关的方法），并提供对WebSocket和HTTP/2的支持
+         */
+        /* 同步方式 */
+        HttpClient client = HttpClient.newHttpClient();
+        HttpRequest request = HttpRequest.newBuilder(URI.create("http://127.0.0.1:8080/test/")).build();
+        HttpResponse.BodyHandler<String> responseBodyHandler = HttpResponse.BodyHandlers.ofString();
+        HttpResponse<String> response = client.send(request, responseBodyHandler);
+        String body = response.body();
+        System.out.println(body);
+        /* 异步方式 */
+        HttpClient client1 = HttpClient.newHttpClient();
+        HttpRequest request1 = HttpRequest.newBuilder(URI.create("http://127.0.0.1:8080/test/")).build();
+        HttpResponse.BodyHandler<String> responseBodyHandler1 = HttpResponse.BodyHandlers.ofString();
+        CompletableFuture<HttpResponse<String>> sendAsync = client.sendAsync(request, responseBodyHandler);
+        sendAsync.thenApply(t -> t.body()).thenAccept(System.out::println);
     }
 }
